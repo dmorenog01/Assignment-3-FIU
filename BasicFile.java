@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.io.FileReader;
 import java.util.Scanner;
+import java.io.StreamTokenizer;
 
 public class BasicFile {
 
@@ -160,7 +161,7 @@ public class BasicFile {
         Scanner readLines = new Scanner(readFile);
 
         while (readLines.hasNextLine()) {
-          counter = counter + 1;
+          counter++;
           readLines.nextLine();
         }
         readFile.close();
@@ -216,12 +217,7 @@ public class BasicFile {
       }
     
     
-    final JFrame frame = new JFrame("File Contents");
-    frame.setVisible(true);
-    JTextArea text = new JTextArea(fileContents);
-    JScrollPane scrollPane = new JScrollPane(text);
-    frame.setSize(500, 300);
-    frame.getContentPane().add(scrollPane);
+    BasicFile.printInScrollPane("File Contents", fileContents);
 
     
   }
@@ -231,21 +227,81 @@ public class BasicFile {
   static void searchTerm(BasicFile basicfile) {
     String fileName = basicfile.f.getName();
 
-    String keyWord;
-    String targetLine;
-
+    String fileMenu = "Word to search: ";
+    String keyword = JOptionPane.showInputDialog(fileMenu).toLowerCase();
+    String resultString = "";
+    int counter = 0;
+    
     try {
         FileReader readFile = new FileReader(fileName);
         Scanner readLines = new Scanner(readFile);
 
         while (readLines.hasNextLine()) {
-          if
+          counter++;
+          String currentLine = readLines.nextLine();
+          if (currentLine.toLowerCase().contains(keyword)) {
+            resultString += counter + ": " + currentLine + "\n";
+          }
+          
         }
+
+       
         readFile.close();
       } catch (IOException e) {
         System.out.println("Error while counting lines");
         e.getStackTrace();
       }
+    BasicFile.printInScrollPane("Keyword Search", resultString);
+  }
+
+  // Tokenizer
+
+  static void tokenizeFile(BasicFile basicfile) {
+        String fileName = basicfile.f.getName();
+    try {
+        StreamTokenizer st = new StreamTokenizer(new FileReader(fileName));
+        String resultString = "";
+      st.eolIsSignificant(true); // Recognize end of line as token
+		    st.wordChars('"', '"');    // Recognize double quote (") as token
+		    st.wordChars('@', '@');    // Recognize at (@) as token
+		    st.wordChars(',', ',');    // Recognize comma (,) as token
+		    st.wordChars('\'', '\'');  // Recognize single quote (') as token
+		    st.wordChars('!', '!');    // Recognize exclamation(!) as token
+		    st.lowerCaseMode(true);		// Ignore case sensitivity 
+    
+        while (st.nextToken() != StreamTokenizer.TT_EOF) 
+        {           
+            switch(st.ttype)
+            {
+            	case StreamTokenizer.TT_WORD: // Test for string
+	                resultString += st.sval + "\n";
+            	break;
+            	case StreamTokenizer.TT_NUMBER: // Test for number
+	                resultString += st.sval + "\n";
+           		break;
+       			case StreamTokenizer.TT_EOL: // Test for end of line
+	           		//resultString += "\tNew line ++> " + st.sval + (char) st.ttype + "\n";		
+           		break;
+           		default: // Display any other values
+        		 	resultString += ((char) st.ttype + " --> not recognized\n"  ); 
+				break;
+                
+            }
+      }
+    BasicFile.printInScrollPane("Tokenized File", resultString);
+    } catch (IOException e) {
+      System.out.println("Error");
+    }
+        
+  }
+  private static void printInScrollPane(String paneTitle, String contents){
+    
+    final JFrame frame = new JFrame(paneTitle);
+    frame.setVisible(true);
+    JTextArea text = new JTextArea(contents);
+    JScrollPane scrollPane = new JScrollPane(text);
+    frame.setSize(500, 300);
+    frame.getContentPane().add(scrollPane);
   }
   
 }

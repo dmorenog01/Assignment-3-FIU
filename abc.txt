@@ -1,0 +1,6 @@
+The "quick-brown" 
+fox,
+jumped
+over the lazy dog's body!
+12 times
+smithjo@cs.fiu.edu

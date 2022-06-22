@@ -52,6 +52,14 @@ class Main {
         System.out.println("Display file contents");
         BasicFile.displayContents(f);
         break;
+      case 5:
+        System.out.println("Search for keyword.");
+        BasicFile.searchTerm(f);
+        break;
+      case 6:
+        System.out.println("Tokenize File");
+        BasicFile.tokenizeFile(f);
+        break;
       default:
         System.out.println("Not a valid option");
         break;
