@@ -25,7 +25,8 @@ class Main {
             break;
         }
       } catch (NumberFormatException | NullPointerException e) {
-        display(e.toString(), "Error");
+        done = true;
+        //display(e.toString(), "Error");
       }
     }
   }
